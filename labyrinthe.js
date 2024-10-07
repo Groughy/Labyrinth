@@ -33,30 +33,27 @@ function solveLabyrinth(grid, start, goal) {
     let path = [];
         function checkPath() {
             const [x, y] = current;
-            if (x + 1 < width && grid[y][x + 1] !== "|" && !path.some(p => p[0] === x + 1 && p[1] === y)) { // On regarde à droite
-                current = [x + 1, y];
-                path.push(current);
-            } else if (y + 1 < height && grid[y + 1][x] !== "|" && !path.some(p => p[0] === x && p[1] === y + 1)) { // On  regarde en bas
-                current = [x, y + 1];
-                path.push(current);
-            } else if (x - 1 >= 0 && grid[y][x - 1] !== "|" && !path.some(p => p[0] === x - 1 && p[1] === y)) { // On regarde à gauche
-                current = [x - 1, y];
-                path.push(current);
-            } else if (y - 1 >= 0 && grid[y - 1][x] !== "|" && !path.some(p => p[0] === x && p[1] === y - 1)) { // On regarde en haut
-                current = [x, y - 1];
-                path.push(current);
-            } else { // Sinon, on revient en arrière
+            const directions = [
+                [1, 0], 
+                [0, 1], 
+                [-1, 0], 
+                [0, -1]
+        ];
 
-                path.pop();
-                if (path.length === 0) {
-                    console.log("Cul de sac.");
-                    return false;
+            for (const [dx, dy] of directions){ // On regarde dans chacune des directions
+                const newX = x + dx;
+                const newY = y + dy;
+
+
+                if (newX >= 0 && newX < width && newY >= 0 && newY < height && // Si newX et newY sont dans le labyrinthe
+                    grid[newY][newX] !== "|" && !path.some(p => p[0] === newX && p[1] === newY)) { // Si la case n'est pas bloquée ni déjà visitée
+                    current = [newX, newY];
+                    path.push(current);
+                    return true;
                 }
-                current = path[path.length - 1];
             }
-            return true;
         }
-        
+
         while (JSON.stringify(current) !== JSON.stringify(goal)) {
         if(!checkPath()){
             break;
@@ -66,4 +63,4 @@ function solveLabyrinth(grid, start, goal) {
 }
 
 const solution = solveLabyrinth(grid, start, goal);
-console.log(solution);
+console.log("Chemin à suivre : ", solution);
