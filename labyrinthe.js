@@ -28,38 +28,54 @@ function printMaze(grid){
 printMaze(grid);
 
 function solveLabyrinth(grid, start, goal) {
+    let visited = Array.from({ length: height }, () => Array(width).fill(false)); // Grille des cases visitées
     // TODO
-    let current = start;
     let path = [];
-        function checkPath() {
-            const [x, y] = current;
-            const directions = [
-                [1, 0], // On regarde à droite
-                [0, 1], // On regarde en bas
-                [-1, 0], // On regarde à gauche
-                [0, -1] // On regarde en haut
-        ];
+    const directions = [
+        [1, 0], // On regarde à droite
+        [0, 1], // On regarde en bas
+        [-1, 0], // On regarde à gauche
+        [0, -1] // On regarde en haut
+    ];
 
-            for (const [dx, dy] of directions){ // On regarde dans chacune des directions
-                const newX = x + dx;
-                const newY = y + dy;
+    function dfs(x, y) {
+        // Si on atteint le but, ajouter la position actuelle au chemin et retourner true
+        if (x === goal[0] && y === goal[1]) {
+            path.push([x, y]);
+            return true;
+        }
 
+        // Marquer la case actuelle comme visitée
+        visited[y][x] = true;
+        path.push([x, y]); // Ajouter la position actuelle au chemin
 
-                if (newX >= 0 && newX < width && newY >= 0 && newY < height && // Si newX et newY sont dans le labyrinthe
-                    grid[newY][newX] !== "|" && !path.some(p => p[0] === newX && p[1] === newY)) { // Si la case n'est pas bloquée ni déjà visitée
-                    current = [newX, newY];
-                    path.push(current);
+        // Essayer chaque direction
+        for (const [dx, dy] of directions) {
+            const newX = x + dx;
+            const newY = y + dy;
+
+            // Vérifier si la nouvelle position est valide (dans les limites, pas un mur, pas encore visitée)
+            if (newX >= 0 && newX < width && newY >= 0 && newY < height && 
+                grid[newY][newX] !== "|" && !visited[newY][newX]) {
+                
+                // Si dfs sur la nouvelle position retourne true, on a trouvé le chemin
+                if (dfs(newX, newY)) {
                     return true;
                 }
             }
         }
 
-        while (JSON.stringify(current) !== JSON.stringify(goal)) {
-        if(!checkPath()){
-            break;
-        }
+        // Si aucune direction n'est possible, on retire cette position du chemin et on revient en arrière
+        path.pop();
+        return false;
     }
-    return path;
+
+    // Appel initial de la fonction de backtracking depuis le point de départ
+    if (dfs(start[0], start[1])) {
+        return path; // Retourner le chemin si trouvé
+    } else {
+        return null; // Retourner null si aucun chemin n'a été trouvé
+    }
 }
 
 const solution = solveLabyrinth(grid, start, goal);
