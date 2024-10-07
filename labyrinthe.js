@@ -34,10 +34,10 @@ function solveLabyrinth(grid, start, goal) {
         function checkPath() {
             const [x, y] = current;
             const directions = [
-                [1, 0], 
-                [0, 1], 
-                [-1, 0], 
-                [0, -1]
+                [1, 0], // On regarde à droite
+                [0, 1], // On regarde en bas
+                [-1, 0], // On regarde à gauche
+                [0, -1] // On regarde en haut
         ];
 
             for (const [dx, dy] of directions){ // On regarde dans chacune des directions
