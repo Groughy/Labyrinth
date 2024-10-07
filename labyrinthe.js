@@ -1,13 +1,31 @@
+// Taille du labyrinthe
+
 const width = 7;
 const height = 6;
+
+// Création du labyrinthe
+
 let grid = Array.from({length: height}, ()=> Array(width).fill(0));
+const blocked = [
+    [1,0], [1,1], [1,2], 
+    [1,4], [1,5], [3,1], 
+    [3,2], [3,4], [4,1], 
+    [4,3], [5,3], [5,5], 
+    [6,1]
+];
+
 const start = [0,0];
 const goal = [4,2];
-const blocked = [[1,0], [1,2], [1,4], [1,5], [3,1], [3,2], [3,4], [4,1], [4,3], [5,3], [5,5], [6,1]];
 
 for (const [x, y] of blocked) {
     grid[y][x] = "|";
 }
+
+function printMaze(grid){
+    console.log(grid.map(row => row.join('')).join('\n'));
+}
+
+printMaze(grid);
 
 function solveLabyrinth(grid, start, goal) {
     // TODO
@@ -31,18 +49,21 @@ function solveLabyrinth(grid, start, goal) {
 
                 path.pop();
                 if (path.length === 0) {
-                    console.log("No solution found");
-                    return;
+                    console.log("Cul de sac.");
+                    return false;
                 }
                 current = path[path.length - 1];
             }
+            return true;
         }
-        while (current[0] !== goal[0] || current[1] !== goal[1]) {
-        checkPath();
+        
+        while (JSON.stringify(current) !== JSON.stringify(goal)) {
+        if(!checkPath()){
+            break;
+        }
     }
-    printMaze(grid);
-    function printMaze(grid){
-        console.log(grid.map(row => row.join('')).join('\n'));
-    }
+    return path;
 }
-console.log(solveLabyrinth(grid, start, goal));
+
+const solution = solveLabyrinth(grid, start, goal);
+console.log(solution);
