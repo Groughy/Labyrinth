@@ -3,6 +3,7 @@
 const width = 7;
 const height = 6;
 
+let count = 0;
 // Création du labyrinthe
 
 let grid = Array.from({length: height}, ()=> Array(width).fill(0));
@@ -60,6 +61,7 @@ function solveLabyrinth(grid, start, goal) {
                 
                 // Si dfs sur la nouvelle position retourne true, on a trouvé le chemin
                 if (dfs(newX, newY)) {
+                    count++;
                     return true;
                 }
             }
@@ -72,6 +74,7 @@ function solveLabyrinth(grid, start, goal) {
 
     // Appel initial de la fonction de backtracking depuis le point de départ
     if (dfs(start[0], start[1])) {
+        count++;
         return path; // Retourner le chemin si trouvé
     } else {
         return null; // Retourner null si aucun chemin n'a été trouvé
@@ -80,3 +83,4 @@ function solveLabyrinth(grid, start, goal) {
 
 const solution = solveLabyrinth(grid, start, goal);
 console.log("Chemin à suivre : ", solution);
+console.log("Nombre de cases parcouru : ", count);
