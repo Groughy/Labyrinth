@@ -23,7 +23,7 @@ for (const [x, y] of blocked) {
 }
 
 function printMaze(grid){
-    console.log(grid.map(row => row.join('')).join('\n'));
+    console.log(grid.map(row => row.join(' ')).join('\n'));
 }
 
 printMaze(grid);
@@ -33,10 +33,10 @@ function solveLabyrinth(grid, start, goal) {
     // TODO
     let path = [];
     const directions = [
-        [1, 0], // On regarde à droite
-        [0, 1], // On regarde en bas
-        [-1, 0], // On regarde à gauche
-        [0, -1] // On regarde en haut
+        [1, 0], // On regarde à l'est
+        [0, 1], // On regarde au sud
+        [-1, 0], // On regarde à l'ouest
+        [0, -1] // On regarde au nord
     ];
 
     function dfs(x, y) {
@@ -56,9 +56,9 @@ function solveLabyrinth(grid, start, goal) {
             const newY = y + dy;
 
             // Vérifier si la nouvelle position est valide (dans les limites, pas un mur, pas encore visitée)
-            if (newX >= 0 && newX < width && newY >= 0 && newY < height && 
+            if (newX >= 0 && newX < width && newY >= 0 && newY < height &&
                 grid[newY][newX] !== "|" && !visited[newY][newX]) {
-                
+
                 // Si dfs sur la nouvelle position retourne true, on a trouvé le chemin
                 if (dfs(newX, newY)) {
                     count++;
@@ -68,7 +68,7 @@ function solveLabyrinth(grid, start, goal) {
         }
 
         // Si aucune direction n'est possible, on retire cette position du chemin et on revient en arrière
-        path.pop();
+        count++;
         return false;
     }
 
@@ -83,4 +83,14 @@ function solveLabyrinth(grid, start, goal) {
 
 const solution = solveLabyrinth(grid, start, goal);
 console.log("Chemin à suivre : ", solution);
+if (solution) {
+    // Marquer le chemin dans la grille avec des numéros croissants
+    solution.forEach(([x, y], count) => {
+        grid[y][x] = count + 1;
+    });
+    printMaze(grid);
+} else {
+    console.log("Aucun chemin trouvé.");
+}
+
 console.log("Nombre de cases parcouru : ", count);
