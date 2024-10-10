@@ -68,6 +68,7 @@ function solveLabyrinth(grid, start, goal) {
         }
 
         // Si aucune direction n'est possible, on retire cette position du chemin et on revient en arrière
+        path.pop();
         count++;
         return false;
     }
